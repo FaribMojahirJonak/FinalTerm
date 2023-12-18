@@ -2,10 +2,7 @@ package dev.domain;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Past;
-import javax.validation.constraints.Pattern;
-import javax.validation.constraints.Size;
+import javax.validation.constraints.*;
 import java.time.LocalDate;
 
 public class Student {
@@ -23,8 +20,10 @@ public class Student {
     private String password;
 
     @NotNull
-    @Past
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
+    @NotNull(message = "Date of Birth is required")
+    @Past(message = "Date of Birth must be in the past")
+    @Age
     private LocalDate dateOfBirth;
 
     private Gender gender;
@@ -100,7 +99,7 @@ public class Student {
     }
 
     public void setQuota(String quota) {
-        this.quota = quota;
+        this.quota = (quota == null || quota.trim().isEmpty()) ? "N/A" : quota;
     }
 
     public String getCountry() {

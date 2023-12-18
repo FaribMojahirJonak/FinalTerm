@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.validation.Valid;
 import java.sql.SQLException;
+import java.util.List;
 
 @Controller
 public class StudentController {
@@ -47,21 +48,42 @@ public class StudentController {
         }
     }
 
-    @RequestMapping("/get/{id}")
-    public String sixth(@PathVariable ("email") String email, Model model) throws SQLException {
-        Student student = studentService.get(email);
+    @RequestMapping("/students")
+    public String showStudents(Model model) throws SQLException {
+        List<Student> students = studentService.getAllStudents();
+        model.addAttribute("students", students);
+        return "student";
+    }
+
+
+    @RequestMapping("/students/{id}")
+    public String sixth(@PathVariable ("id") int id, Model model) throws SQLException {
+        Student student = studentService.get(id);
+        model.addAttribute("student", student);
+        return "details";
+    }
+
+    @RequestMapping("/students/{id}/edit")
+    public String edit(@PathVariable ("id") int id, Model model) throws SQLException {
+        Student student = studentService.get(id);
         model.addAttribute("student", student);
         return "update";
     }
 
-    @RequestMapping("/update")
-    public String sixth(@Valid @ModelAttribute("student") Student student, BindingResult bindingResult) throws SQLException {
+    @RequestMapping("/students/{id}/edit/update")
+    public String update(@Valid @PathVariable ("id") int id, @ModelAttribute("student") Student student, BindingResult bindingResult) throws SQLException {
         if (bindingResult.hasErrors()) {
-            return "update";
+            return "/students/{id}/edit/update";
         }
         else {
             studentService.update(student);
-            return "/";
+            return "redirect:/students/{id}";
         }
+    }
+
+    @RequestMapping("/students/{id}/delete")
+    public String delete(@PathVariable("id") int id) throws SQLException {
+        studentService.delete(id);
+        return "redirect:/students";
     }
 }

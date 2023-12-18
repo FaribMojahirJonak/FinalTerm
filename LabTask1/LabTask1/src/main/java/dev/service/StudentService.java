@@ -5,6 +5,7 @@ import dev.repository.StudentRepository;
 import org.springframework.stereotype.Service;
 
 import java.sql.SQLException;
+import java.util.List;
 
 @Service
 public class StudentService {
@@ -20,11 +21,18 @@ public class StudentService {
         studentRepository.create(student);
     }
 
+    public List<Student> getAllStudents() throws SQLException {
+        return studentRepository.getAll();
+    }
+    public Student get(int id) throws SQLException {
+        return studentRepository.get(id);
+    }
+
     public void update(Student student) throws  SQLException {
         studentRepository.update(student);
     }
 
-    public Student get(String email) throws SQLException {
-        return studentRepository.get(email);
+    public void delete(int id) throws SQLException {
+        studentRepository.delete(id);
     }
 }
